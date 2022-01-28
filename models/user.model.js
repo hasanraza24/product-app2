@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     }
-});
+}, { timestamps: true });
 
 //pre save hook for validation
 userSchema.post('save', (err, res, next) => {

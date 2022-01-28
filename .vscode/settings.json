@@ -1,0 +1,8 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "prettier.tabWidth": 4,
+    "prettier.arrowParens": "avoid",
+    "prettier.trailingComma": "all",
+    "prettier.ignorePath": ".prettierignore"
+}

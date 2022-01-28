@@ -1,10 +1,10 @@
 const createError = require('http-errors');
 const express = require('express');
-const path = require('path');
-const expressValidation = require('express-validation');
+const { ValidationError } = require('express-validation');
+const bodyParser = require('body-parser');
 const UnauthorizedError = require('express-jwt').UnauthorizedError;
 
-// const indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 // const usersRouter = require('./routes/users');
 // const threadRouter = require('./routes/thread');
 
@@ -14,12 +14,7 @@ const app = express();
 
 
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json())
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -35,16 +30,16 @@ app.options('*', (req, res, next) => {
 
 // app.use(authHandler);
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 // app.use('/threads', threadRouter);
 
 //catch errors
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
-  if (err instanceof expressValidation.ValidationError) {
+  if (err instanceof ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
-    const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
+    const unifiedErrorMessage = err.details.body.map(error => error.message).join(' and ');
     const error = createError(401, unifiedErrorMessage);
     return next(error);
   } else if (err instanceof UnauthorizedError) {

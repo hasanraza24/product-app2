@@ -6,7 +6,7 @@ require('dotenv').config();
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .allow(['development', 'production', 'test', 'provision'])
+    .allow('development', 'production', 'test', 'provision')
     .default('development'),
   PORT: Joi.number()
     .default(8081),
@@ -17,11 +17,8 @@ const envVarsSchema = Joi.object({
 }).unknown()
   .required();
 
-const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
-if (error) {
-  throw new Error(`Config validation error: ${error.message}`);
-}
-
+const envVars = Joi.attempt(process.env, envVarsSchema);
+console.log("value", envVars)
 const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
